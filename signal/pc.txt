@@ -1,0 +1,48 @@
+Parent
+^^^^^^
+
+void sendToChild(int);
+
+int main(int argc, char **argv) {
+    char[8] buf;
+    int[2] pipe; //"pipe" file handles; 0==parentWrite; 1==childWrite
+    int pid = 0;
+    int status = 0;
+
+    pipe[0] = open("parentWr", O_RW);
+    // open() error handling
+    pipe[1] = open("childWr", O_RW);
+    // open() error handling
+
+    pid = fork();
+
+    if (pid>0) {
+        // Do parent stuff;
+        signal(SIGINT, sendToChild); // inst. sig hdlr
+
+        while (1) { // The meat, do a read every 2 secs and do somthing based on what's there
+            lseek(pipe[1], 0, 0);
+            buf = "00000000";
+            status = write(p[0], buf, 8);
+            // write error handling
+
+        }
+
+    }
+    else if (pid==0) {
+        // Do child stuff
+        if ( 0 > execv("child", argv) ) {
+            // exec failed; bail...
+            exit(-1);
+        }
+        // never gets here
+    }
+    else {
+        // fork failed; bail...
+        exit(-1);
+    }
+}
+
+void sendToChild(int theSig) {
+    write(p[0], buf, 
+}

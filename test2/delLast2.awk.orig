@@ -1,0 +1,16 @@
+BEGIN {
+    flag = 0
+}
+flag == 1 {
+    prePrev = prev
+    prev = $0
+}
+flag > 1 {
+    print prePrev
+    prePrev = prev
+    prev = $0
+}
+{
+    flag++
+    prev = $0
+}

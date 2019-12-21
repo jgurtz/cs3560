@@ -1,0 +1,12 @@
+BEGIN {
+    max = 0
+}
+{
+    for (i=1; i<=NF; i++) {
+
+        $i > max ? max = $i : max = max
+    }
+}
+END {
+    print max
+}

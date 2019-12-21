@@ -1,0 +1,62 @@
+$ ./wcc -h
+wcc - Count number of single-byte characters
+
+Usage:
+    wcc [-h] [file ...]
+
+    -h Print this help message, files ignored
+
+If no files are specified, standard input is read and no file name is displayed.
+Input will be accepted until receiving EOF (usually ^D).
+
+If more than one valid file is given, also displays total number of characters
+in all files.
+
+# In the first example, counting characters from stdin, I typed abc123, pressed Enter, control-d, Enter
+# Result is seven because newline chacter is counted
+#
+$ ./wcc
+abc123
+       7
+$ ./wcc wcc.c
+    2152 wcc.c
+$ ./wcc wcc.c Makefile
+    2152 wcc.c
+     166 Makefile
+    2318 total
+$ ./wcc wcc.c Makefile notafile
+    2152 wcc.c
+     166 Makefile
+Could not open file notafile; No such file or directory
+    2318 total
+$ ./wcc wcc.c Makefile notafile 2>/dev/null
+    2152 wcc.c
+     166 Makefile
+    2318 total
+# Showing it is just a byte counter with single multi-byte unicode symbol (person in Mandrin)
+$ cat U+4EBA.txt
+人
+$ ./wcc U+4EBA.txt
+       4 U+4EBA.txt
+
+# Same commands with real wc -c command
+$ wc -c
+abc123
+       7
+$ wc -c wcc.c
+    2152 wcc.c
+$ wc -c wcc.c Makefile
+    2152 wcc.c
+     166 Makefile
+    2318 total
+$ wc -c wcc.c Makefile notafile
+    2152 wcc.c
+     166 Makefile
+wc: notafile: open: No such file or directory
+    2318 total
+$ wc -c wcc.c Makefile notafile 2>/dev/null
+    2152 wcc.c
+     166 Makefile
+    2318 total
+$ wc -c U+4EBA.txt
+       4 U+4EBA.txt

@@ -1,0 +1,44 @@
+$ ./jcp -h
+jcp - copy a file to another
+
+Usage:
+    jcp [-h] origin_file destination_file
+
+    -h print this help message; files are ignored.
+
+Behavior:
+    If destination file exists, it will be overwritten.
+
+    If destination file doesn't exist, it will be created with the permissions of the origin.
+
+$ mkdir output
+$ chmod 0444 ./output/      # Make ./output directory read-only
+$ ls -l
+total 88
+-rw-r--r--  1 jgurtz  staff   166 May  3 09:09 Makefile
+-rw-r--r--  1 jgurtz  staff     4 May  5 22:27 U+4EBA.txt
+-rwxr-xr-x  1 jgurtz  staff  8896 May  5 20:09 jcp
+-rw-r--r--  1 jgurtz  staff  2925 May  5 20:09 jcp.c
+dr--r--r--  2 jgurtz  staff    64 May  5 22:39 output
+-rwxr-xr-x  1 jgurtz  staff  9012 May  5 20:09 wcc
+-rw-r--r--  1 jgurtz  staff  2163 May  5 22:36 wcc.c
+-rw-r--r--@ 1 jgurtz  staff  1362 May  5 22:35 wcc_output.txt
+$ ./jcp Makefile ./output/Makefile
+Could not open or create file ./output/Makefile for writing; Permission denied
+$ chmod 0755 output/        # Restore normal R/W access
+$ ./jcp Makefile ./output/Makefile
+$ sha1sum Makefile ./output/Makefile        # Prove files are the same
+59621a77b2cb041846df2b1d65f248f83886d083  Makefile
+59621a77b2cb041846df2b1d65f248f83886d083  ./output/Makefile
+$ chmod 0000 ./jcp.c        # Set file permisions to no-access
+$ ./jcp jcp.c ./output/Makefile
+Could not open file jcp.c for reading; Permission denied
+$ sha1sum Makefile ./output/Makefile        # Prove existing file is still the same
+59621a77b2cb041846df2b1d65f248f83886d083  Makefile
+59621a77b2cb041846df2b1d65f248f83886d083  ./output/Makefile
+$ chmod 0644 jcp.c          # Restore permissions
+C02VD332HTDD:hw2 jgurtz$ ./jcp jcp.c ./output/Makefile
+$ sha1sum ./Makefile ./jcp.c ./output/Makefile      # Show file was overwritten and is same as jcp.c
+59621a77b2cb041846df2b1d65f248f83886d083  ./Makefile
+5789e3f282d61da1506420aa5a8841973e86e598  ./jcp.c
+5789e3f282d61da1506420aa5a8841973e86e598  ./output/Makefile
